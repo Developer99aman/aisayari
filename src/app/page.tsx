@@ -343,6 +343,38 @@ export default function Home() {
     }
   }, []); // Run only once on mount
 
+  // Inject ad script on mount (10 times)
+  useEffect(() => {
+    for (let i = 0; i < 10; i++) {
+      const adScriptConfig = document.createElement('script');
+      adScriptConfig.type = 'text/javascript';
+      adScriptConfig.innerHTML = `
+        atOptions = {
+          'key' : '50a2f196ce5ce0ec2cd2875de6dce639',
+          'format' : 'iframe',
+          'height' : 90,
+          'width' : 728,
+          'params' : {}
+        };
+      `;
+      const adScriptSrc = document.createElement('script');
+      adScriptSrc.type = 'text/javascript';
+      adScriptSrc.src = '//www.highperformanceformat.com/50a2f196ce5ce0ec2cd2875de6dce639/invoke.js';
+      const adContainer = document.getElementById(`ad-container-${i}`);
+      if (adContainer) {
+        adContainer.appendChild(adScriptConfig);
+        adContainer.appendChild(adScriptSrc);
+      }
+    }
+    // Cleanup on unmount
+    return () => {
+      for (let i = 0; i < 10; i++) {
+        const adContainer = document.getElementById(`ad-container-${i}`);
+        if (adContainer) adContainer.innerHTML = '';
+      }
+    };
+  }, []);
+
   return (
     <div className="min-h-screen p-4 bg-gradient-to-br from-blue-100 to-green-100 dark:from-gray-950 dark:to-blue-950">
       <header className="text-center py-6 relative">
@@ -522,7 +554,14 @@ export default function Home() {
         )}
       </main>
 
-      <footer className="footer text-center py-4 text-gray-600 dark:text-gray-400">© 2025 AI Shayari Generator</footer>
+      <footer className="footer text-center py-4 text-gray-600 dark:text-gray-400">
+        © 2025 AI Shayari Generator
+        {/* Ad Script Start */}
+        {[...Array(10)].map((_, i) => (
+          <div key={i} id={`ad-container-${i}`} className="flex justify-center mt-4"></div>
+        ))}
+        {/* Ad Script End */}
+      </footer>
     </div>
   );
 }
