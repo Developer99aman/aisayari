@@ -273,9 +273,6 @@ export default function Home() {
         case 'Hindi':
           utterance.lang = 'hi-IN';
           break;
-        case 'Urdu':
-          utterance.lang = 'ur';
-          break;
         case 'English':
           utterance.lang = 'en-US';
           break;
@@ -334,15 +331,7 @@ export default function Home() {
     document.body.removeChild(element);
   };
 
-  // Toggle dark mode
-  useEffect(() => {
-    if (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, []); // Run only once on mount
-
+ 
   // Inject new ad script on mount (10 times, with unique variable per ad)
   useEffect(() => {
     for (let i = 0; i < 10; i++) {
