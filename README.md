@@ -17,7 +17,6 @@ AI Shayari Generator is a web application that uses Next.js and the Google Gemin
 - [Next.js](https://nextjs.org/) - React framework for building the application
 - [TypeScript](https://www.typescriptlang.org/) - For type-safe code
 - [Tailwind CSS](https://tailwindcss.com/) - For styling the application
-- [Google Gemini API](https://ai.google.dev/) - For AI-powered shayari generation
 - [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API) - For voice input and text-to-speech functionality
 
 ## Getting Started
