@@ -1,21 +1,158 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
 
 // Define theme options
 const THEMES = [
-  'Love', 'Friendship', 'Sadness', 'Motivation', 
-  'Life', 'Nature', 'Happiness', 'Hope',
-  'Betrayal', 'Patriotism', 'Spirituality'
+  'Love',
+  'Sad',
+  'Friendship',
+  'Life',
+  'Inspirational',
+  'Nature',
+  'Humor',
+  'Patriotic',
+  'Devotional',
+  'Philosophical',
+  'Romantic',
+  'Motivational',
+  'Beauty',
+  'Pain',
+  'Hope',
+  'Dreams',
+  'Family',
+  'Children',
+  'Wisdom',
+  'Courage',
+  'Destiny',
+  'Time',
+  'Silence',
+  'Rain',
+  'Stars',
+  'Moon',
+  'Sun',
+  'Flowers',
+  'Birds',
+  'Rivers',
+  'Mountains',
+  'Sea',
+  'Desert',
+  'Forest',
+  'Journey',
+  'Memories',
+  'Separation',
+  'Reunion',
+  'Celebration',
+  'Festival',
+  'Morning',
+  'Evening',
+  'Night',
+  'Winter',
+  'Spring',
+  'Summer',
+  'Autumn',
+  'Childhood',
+  'Youth',
+  'Old Age',
+  'Death',
+  'Birth',
+  'Marriage',
+  'Friend',
+  'Teacher',
+  'Mother',
+  'Father',
+  'Sister',
+  'Brother',
+  'God',
+  'Prayer',
+  'Faith',
+  'Truth',
+  'Lie',
+  'Justice',
+  'Injustice',
+  'Peace',
+  'War',
+  'Freedom',
+  'Slavery',
+  'Rich',
+  'Poor',
+  'King',
+  'Queen',
+  'Soldier',
+  'Farmer',
+  'Doctor',
+  'Engineer',
+  'Artist',
+  'Poet',
+  'Writer',
+  'Musician',
+  'Dancer',
+  'Singer',
+  'Actor',
+  'Student',
+  'funny',
+  'education',
+  'sigma',
+  'trend',
 ];
 
 // Define language options
-const LANGUAGES = ['Hindi',  'English'  ];
+const LANGUAGES = [
+    'English',
+    'Hindi',
+    'Urdu',
+    'Punjabi',
+    'Bengali',
+    'Tamil',
+    'Telugu',
+    'Marathi',
+    'Gujarati',
+    'Kannada',
+    'Malayalam',
+    'Odia',
+    'Assamese',
+    'Nepali',
+    'Bhojpuri',
+    'Haryanvi',
+    'Rajasthani',
+    'Maithili',
+    'Sindhi',
+    'Kashmiri',
+    'Konkani',
+    'Dogri',
+    'Manipuri',
+    'Sanskrit',
+    'Santali'
+  ];
 
 // Define line count options
 const LINE_COUNTS = [2, 4, 6, 8];
 
+// TypeScript type definitions for SpeechRecognition (for browsers that don't have them)
+type SpeechRecognitionResultCallback = (event: {
+  results: SpeechRecognitionResultList;
+}) => void;
+
+interface ISpeechRecognition extends EventTarget {
+  lang: string;
+  continuous: boolean;
+  start(): void;
+  stop(): void;
+  abort(): void;
+  onresult: SpeechRecognitionResultCallback | null;
+  onend: (() => void) | null;
+}
+
+declare global {
+  interface Window {
+    SpeechRecognition?: {
+      new (): ISpeechRecognition;
+    };
+    webkitSpeechRecognition?: {
+      new (): ISpeechRecognition;
+    };
+  }
+}
 
 export default function Home() {
   // State variables
@@ -23,15 +160,14 @@ export default function Home() {
   const [language, setLanguage] = useState('Hindi');
   const [customInput, setCustomInput] = useState('');
   const [lineCount, setLineCount] = useState(4);
-  const [length, setLength] = useState('Medium');
   const [shayari, setShayari] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState('');
-  const [favorites, setFavorites] = useState<string[]>([]);
+  const [favorites, setFavorites] = useState<string[]>(() => []);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const speechSynthesisRef = useRef<SpeechSynthesis | null>(null);
-  const speechRecognitionRef = useRef<any>(null);
+  const speechRecognitionRef = useRef<ISpeechRecognition | null>(null);
 
   // Load favorites from localStorage on component mount
   useEffect(() => {
@@ -45,20 +181,22 @@ export default function Home() {
       speechSynthesisRef.current = window.speechSynthesis;
       
       // Initialize speech recognition if available
-      if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
-        const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-        speechRecognitionRef.current = new SpeechRecognition();
-        speechRecognitionRef.current.continuous = false;
-        speechRecognitionRef.current.lang = 'hi-IN'; // Default to Hindi
-        
-        speechRecognitionRef.current.onresult = (event: any) => {
-          const transcript = event.results[0][0].transcript;
-          setTheme(transcript);
-        };
-        
-        speechRecognitionRef.current.onend = () => {
-          setIsListening(false);
-        };
+      if (typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition)) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+          speechRecognitionRef.current = new SpeechRecognition();
+          speechRecognitionRef.current.continuous = false;
+          speechRecognitionRef.current.lang = 'hi-IN'; // Default to Hindi
+          
+          speechRecognitionRef.current.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            setTheme(transcript);
+          };
+          
+          speechRecognitionRef.current.onend = () => {
+            setIsListening(false);
+          };
+        }
       }
     }
   }, []);
@@ -196,47 +334,56 @@ export default function Home() {
     document.body.removeChild(element);
   };
 
+  // Toggle dark mode
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []); // Run only once on mount
+
   return (
-    <div className="min-h-screen p-4 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-900 dark:to-purple-900">
-      <header className="text-center py-6">
-        <h1 className="text-4xl font-bold text-purple-800 dark:text-purple-300">AI Shayari Generator</h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-300">Create beautiful shayari with the power of AI</p>
+    <div className="min-h-screen p-4 bg-gradient-to-br from-blue-100 to-green-100 dark:from-gray-950 dark:to-blue-950">
+      <header className="text-center py-6 relative">
+        <h1 className="text-4xl font-bold text-blue-700 dark:text-blue-300">AI Shayari Generator</h1>
+        <p className="mt-2 text-gray-700 dark:text-gray-400">Create beautiful shayari with the power of AI</p>
+        
       </header>
 
-      <main className="max-w-4xl mx-auto mt-8 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+      <main className="max-w-4xl mx-auto mt-8 p-6 bg-blue-50 dark:bg-gray-900 rounded-lg shadow-lg">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-6">
             <div>
-              <label htmlFor="theme" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label htmlFor="theme" className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">
                 Select Theme
               </label>
-              <div className="flex flex-wrap gap-2">
+              <select
+                id="theme"
+                value={theme}
+                onChange={(e) => setTheme(e.target.value)}
+                className="w-full p-2 border border-blue-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
+              >
                 {THEMES.map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => setTheme(t)}
-                    className={`px-3 py-1 text-sm rounded-full ${theme === t 
-                      ? 'bg-purple-600 text-white' 
-                      : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200'}`}
-                  >
+                  <option key={t} value={t}>
                     {t}
-                  </button>
+                  </option>
                 ))}
-              </div>
+              </select>
               <div className="mt-4 flex items-center">
                 <input
                   type="text"
                   value={theme}
                   onChange={(e) => setTheme(e.target.value)}
                   placeholder="Or type your own theme..."
-                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-l-md focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
+                  className="flex-1 px-4 py-2 border border-blue-300 dark:border-gray-700 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-100"
                 />
                 <button
                   onClick={startVoiceInput}
                   disabled={isListening}
                   className={`p-2 rounded-r-md ${isListening 
                     ? 'bg-red-500 text-white' 
-                    : 'bg-purple-600 text-white hover:bg-purple-700'}`}
+                    : 'bg-blue-600 text-white hover:bg-blue-700'}`}
                   title="Voice input"
                 >
                   {isListening ? '🎤 Listening...' : '🎤'}
@@ -245,39 +392,38 @@ export default function Home() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">
                 Custom Input (Optional)
               </label>
               <textarea
                 value={customInput}
                 onChange={(e) => setCustomInput(e.target.value)}
                 placeholder="Enter words, sentences, or facts to include in the shayari..."
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white h-24"
+                className="w-full px-4 py-2 border border-blue-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-100 h-24"
               />
             </div>
 
             <div>
-              <label htmlFor="language" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label htmlFor="language" className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">
                 Select Language
               </label>
-              <div className="flex gap-2">
+              <select
+                id="language"
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className="w-full p-2 border border-blue-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
+              >
                 {LANGUAGES.map((lang) => (
-                  <button
-                    key={lang}
-                    onClick={() => setLanguage(lang)}
-                    className={`px-4 py-2 rounded-md ${language === lang 
-                      ? 'bg-purple-600 text-white' 
-                      : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200'}`}
-                  >
+                  <option key={lang} value={lang}>
                     {lang}
-                  </button>
+                  </option>
                 ))}
-              </div>
+              </select>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">
                   Number of Lines
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -286,8 +432,8 @@ export default function Home() {
                       key={count}
                       onClick={() => setLineCount(count)}
                       className={`px-3 py-1 text-sm rounded-full ${lineCount === count 
-                        ? 'bg-purple-600 text-white' 
-                        : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200'}`}
+                        ? 'bg-blue-600 text-white' 
+                        : 'bg-blue-100 text-blue-800 dark:bg-gray-700 dark:text-gray-200'}`}
                     >
                       {count}
                     </button>
@@ -300,38 +446,38 @@ export default function Home() {
             <button
               onClick={generateShayari}
               disabled={isGenerating}
-              className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-md font-medium shadow-md hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 disabled:opacity-70"
+              className="w-full py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-md font-medium shadow-md hover:from-blue-700 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-70"
             >
               {isGenerating ? 'Generating...' : 'Generate Shayari'}
             </button>
           </div>
 
-          <div className="bg-purple-50 dark:bg-gray-700 p-4 rounded-lg relative min-h-[200px]">
+          <div className="bg-blue-50 dark:bg-gray-800 p-4 rounded-lg relative min-h-[200px]">
             {error ? (
               <div className="text-red-500 dark:text-red-400">{error}</div>
             ) : shayari ? (
               <>
-                <div className="text-gray-800 dark:text-gray-200 whitespace-pre-line text-lg font-medium">
+                <div className="text-gray-900 dark:text-gray-100 whitespace-pre-line text-lg font-medium">
                   {shayari}
                 </div>
                 <div className="absolute bottom-4 right-4 flex gap-2">
                   <button
                     onClick={copyToClipboard}
-                    className="p-2 bg-gray-200 dark:bg-gray-600 rounded-full hover:bg-gray-300 dark:hover:bg-gray-500"
+                    className="p-2 bg-blue-100 dark:bg-gray-700 rounded-full hover:bg-blue-200 dark:hover:bg-gray-600"
                     title="Copy to clipboard"
                   >
                     📋
                   </button>
                   <button
                     onClick={saveToFavorites}
-                    className="p-2 bg-gray-200 dark:bg-gray-600 rounded-full hover:bg-gray-300 dark:hover:bg-gray-500"
+                    className="p-2 bg-blue-100 dark:bg-gray-700 rounded-full hover:bg-blue-200 dark:hover:bg-gray-600"
                     title="Save to favorites"
                   >
                     ❤️
                   </button>
                   <button
                     onClick={downloadShayari}
-                    className="p-2 bg-gray-200 dark:bg-gray-600 rounded-full hover:bg-gray-300 dark:hover:bg-gray-500"
+                    className="p-2 bg-blue-100 dark:bg-gray-700 rounded-full hover:bg-blue-200 dark:hover:bg-gray-600"
                     title="Download as text"
                   >
                     💾
@@ -340,7 +486,7 @@ export default function Home() {
                     onClick={isSpeaking ? stopSpeaking : speakShayari}
                     className={`p-2 rounded-full ${isSpeaking 
                       ? 'bg-red-500 text-white' 
-                      : 'bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500'}`}
+                      : 'bg-blue-100 dark:bg-gray-700 hover:bg-blue-200 dark:hover:bg-gray-600'}`}
                     title={isSpeaking ? 'Stop speaking' : 'Speak shayari'}
                   >
                     {isSpeaking ? '🔇' : '🔊'}
@@ -348,7 +494,7 @@ export default function Home() {
                 </div>
               </>
             ) : (
-              <div className="text-gray-500 dark:text-gray-400 flex items-center justify-center h-full">
+              <div className="text-gray-600 dark:text-gray-500 flex items-center justify-center h-full">
                 Generated shayari will appear here
               </div>
             )}
@@ -357,11 +503,11 @@ export default function Home() {
 
         {favorites.length > 0 && (
           <div className="mt-8">
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Your Favorites</h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Your Favorites</h2>
             <div className="space-y-4">
               {favorites.map((fav, index) => (
-                <div key={index} className="bg-purple-50 dark:bg-gray-700 p-4 rounded-lg relative">
-                  <div className="text-gray-800 dark:text-gray-200 whitespace-pre-line pr-8">{fav}</div>
+                <div key={index} className="bg-blue-50 dark:bg-gray-800 p-4 rounded-lg relative">
+                  <div className="text-gray-900 dark:text-gray-100 whitespace-pre-line pr-8">{fav}</div>
                   <button
                     onClick={() => removeFromFavorites(index)}
                     className="absolute top-2 right-2 text-red-500 hover:text-red-700"
@@ -376,7 +522,7 @@ export default function Home() {
         )}
       </main>
 
-      <footer className={`footer ${theme}`}>© 2025 AI Shayari Generator</footer>
+      <footer className="footer text-center py-4 text-gray-600 dark:text-gray-400">© 2025 AI Shayari Generator</footer>
     </div>
   );
 }
