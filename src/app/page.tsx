@@ -556,12 +556,63 @@ export default function Home() {
       </main>
 
       <footer className="footer text-center py-4 text-gray-600 dark:text-gray-400">
-        © 2025 AI Shayari Generator
+        
         {/* Ad Script Start */}
         {[...Array(10)].map((_, i) => (
           <div key={i} id={`ad-container-${i}`} className="flex justify-center mt-4"></div>
         ))}
         {/* Ad Script End */}
+         {/* Ad Script Start */}
+        {[...Array(10)].map((_, i) => (
+          <div key={i} id={`ad-container-${i}`} className="flex justify-center mt-4"></div>
+        ))}
+        {/* Ad Script End */}
+         {/* Ad Script Start */}
+        {[...Array(10)].map((_, i) => (
+          <div key={i} id={`ad-container-${i}`} className="flex justify-center mt-4"></div>
+        ))}
+        {/* Ad Script End */}
+         {/* Ad Script Start */}
+        {[...Array(10)].map((_, i) => (
+          <div key={i} id={`ad-container-${i}`} className="flex justify-center mt-4"></div>
+        ))}
+        {/* Ad Script End */}
+         {/* Ad Script Start */}
+        {[...Array(10)].map((_, i) => (
+          <div key={i} id={`ad-container-${i}`} className="flex justify-center mt-4"></div>
+        ))}
+        {/* Ad Script End */}
+         {/* Ad Script Start */}
+        {[...Array(10)].map((_, i) => (
+          <div key={i} id={`ad-container-${i}`} className="flex justify-center mt-4"></div>
+        ))}
+        {/* Ad Script End */}
+         {/* Ad Script Start */}
+        {[...Array(10)].map((_, i) => (
+          <div key={i} id={`ad-container-${i}`} className="flex justify-center mt-4"></div>
+        ))}
+        {/* Ad Script End */}
+         {/* Ad Script Start */}
+        {[...Array(10)].map((_, i) => (
+          <div key={i} id={`ad-container-${i}`} className="flex justify-center mt-4"></div>
+        ))}
+        {/* Ad Script End */}
+         {/* Ad Script Start */}
+        {[...Array(10)].map((_, i) => (
+          <div key={i} id={`ad-container-${i}`} className="flex justify-center mt-4"></div>
+        ))}
+        {/* Ad Script End */}
+         {/* Ad Script Start */}
+        {[...Array(10)].map((_, i) => (
+          <div key={i} id={`ad-container-${i}`} className="flex justify-center mt-4"></div>
+        ))}
+        {/* Ad Script End */}
+         {/* Ad Script Start */}
+        {[...Array(10)].map((_, i) => (
+          <div key={i} id={`ad-container-${i}`} className="flex justify-center mt-4"></div>
+        ))}
+        {/* Ad Script End */}
+        © 2025 AI Shayari Generator
       </footer>
     </div>
   );
