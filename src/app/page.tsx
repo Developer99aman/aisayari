@@ -343,25 +343,26 @@ export default function Home() {
     }
   }, []); // Run only once on mount
 
-  // Inject ad script on mount (10 times)
+  // Inject new ad script on mount (10 times)
   useEffect(() => {
     for (let i = 0; i < 10; i++) {
       const adScriptConfig = document.createElement('script');
       adScriptConfig.type = 'text/javascript';
       adScriptConfig.innerHTML = `
         atOptions = {
-          'key' : '50a2f196ce5ce0ec2cd2875de6dce639',
+          'key' : 'b56ef498626fec04a6a9dae00631edfd',
           'format' : 'iframe',
-          'height' : 90,
-          'width' : 728,
+          'height' : 50,
+          'width' : 320,
           'params' : {}
         };
       `;
       const adScriptSrc = document.createElement('script');
       adScriptSrc.type = 'text/javascript';
-      adScriptSrc.src = '//www.highperformanceformat.com/50a2f196ce5ce0ec2cd2875de6dce639/invoke.js';
+      adScriptSrc.src = '//www.highperformanceformat.com/b56ef498626fec04a6a9dae00631edfd/invoke.js';
       const adContainer = document.getElementById(`ad-container-${i}`);
       if (adContainer) {
+        adContainer.innerHTML = ''; // Clear previous ads if any
         adContainer.appendChild(adScriptConfig);
         adContainer.appendChild(adScriptSrc);
       }
