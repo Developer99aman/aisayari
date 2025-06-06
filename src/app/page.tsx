@@ -343,26 +343,30 @@ export default function Home() {
     }
   }, []); // Run only once on mount
 
-  // Inject new ad script on mount (10 times)
+  // Inject new ad script on mount (10 times, with unique variable per ad)
   useEffect(() => {
     for (let i = 0; i < 10; i++) {
+      // Use a unique variable name for each ad instance
+      const adVar = `atOptions_${i}_${Date.now()}`;
       const adScriptConfig = document.createElement('script');
       adScriptConfig.type = 'text/javascript';
       adScriptConfig.innerHTML = `
-        atOptions = {
+        window['${adVar}'] = {
           'key' : 'b56ef498626fec04a6a9dae00631edfd',
           'format' : 'iframe',
           'height' : 50,
           'width' : 320,
           'params' : {}
         };
+        atOptions = window['${adVar}'];
       `;
       const adScriptSrc = document.createElement('script');
       adScriptSrc.type = 'text/javascript';
       adScriptSrc.src = '//www.highperformanceformat.com/b56ef498626fec04a6a9dae00631edfd/invoke.js';
+      adScriptSrc.async = true;
       const adContainer = document.getElementById(`ad-container-${i}`);
       if (adContainer) {
-        adContainer.innerHTML = ''; // Clear previous ads if any
+        adContainer.innerHTML = '';
         adContainer.appendChild(adScriptConfig);
         adContainer.appendChild(adScriptSrc);
       }
