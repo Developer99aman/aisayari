@@ -522,7 +522,30 @@ export default function Home() {
         )}
       </main>
 
-      <footer className="footer text-center py-4 text-gray-600 dark:text-gray-400">© 2025 AI Shayari Generator</footer>
+      <footer className="footer text-center py-4 text-gray-600 dark:text-gray-400">
+        © 2025 AI Shayari Generator
+        {/* Ad Script Start */}
+        <div id="ad-container" className="flex justify-center mt-4">
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                atOptions = {
+                  'key' : '50a2f196ce5ce0ec2cd2875de6dce639',
+                  'format' : 'iframe',
+                  'height' : 90,
+                  'width' : 728,
+                  'params' : {}
+                };
+              `
+            }}
+          />
+          <script
+            src="//www.highperformanceformat.com/50a2f196ce5ce0ec2cd2875de6dce639/invoke.js"
+            type="text/javascript"
+          />
+        </div>
+        {/* Ad Script End */}
+      </footer>
     </div>
   );
 }
